@@ -149,18 +149,22 @@ class InputStream(object):
         """
         if isinstance(iterable, str):
             data = [character(c) for c in iterable]
+            basetype = str
         elif isinstance(iterable, unicode):
             data = [unicodeCharacter(c) for c in iterable]
+            basetype = unicode
         else:
             data = list(iterable)
-        return cls(data, 0)
+            basetype = list
+        return cls(data, 0, basetype)
     fromIterable = classmethod(fromIterable)
 
-    def __init__(self, data, position):
+    def __init__(self, data, position, basetype):
         self.data = data
         self.position = position
         self.memo = {}
         self.tl = None
+        self.basetype = basetype
 
     def head(self):
         if self.position >= len(self.data):
@@ -172,11 +176,11 @@ class InputStream(object):
 
     def tail(self):
         if self.tl is None:
-            self.tl = InputStream(self.data, self.position + 1)
+            self.tl = InputStream(self.data, self.position + 1, self.basetype)
         return self.tl
 
     def prev(self):
-        return InputStream(self.data, self.position - 1)
+        return InputStream(self.data, self.position - 1, self.basetype)
 
     def getMemo(self, name):
         """
@@ -582,6 +586,16 @@ class OMetaBase(object):
 
     rule_digit = digit
 
+    def consumed_by(self, f):
+        """
+            Try to parse f, if successful return the full string matching it
+        """
+        m = self.input
+        r = f()
+        consumed = m.data[m.position:self.input.position]
+        if m.basetype in (str, unicode):
+            consumed = ''.join(consumed)
+        return consumed, r[1]
 
     def pythonExpr(self, endChars="\r\n"):
         """

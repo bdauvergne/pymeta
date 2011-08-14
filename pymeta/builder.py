@@ -61,6 +61,9 @@ class TreeBuilder(object):
     def listpattern(self, exprs):
         return ["List", exprs]
 
+    def consumedby(self, exprs):
+        return ["ConsumedBy", exprs]
+
 class PythonWriter(object):
     """
     Converts an OMeta syntax tree into Python source.
@@ -223,7 +226,6 @@ class PythonWriter(object):
         fname = self._newThunkFor("lookahead", expr)
         return self._expr("lookahead", "self.lookahead(%s)" %(fname,))
 
-
     def generate_And(self, exprs):
         """
         Generate code for each statement in order.
@@ -292,6 +294,10 @@ class PythonWriter(object):
             self.lines.extend(['', ''])
         self.lines[start:] = [line and (' ' * 4 + line) for line in self.lines[start:]]
         del self.lines[-1:]
+
+    def generate_ConsumedBy(self, expr):
+        fname = self._newThunkFor("consumed_by", expr)
+        return self._expr("consumed_by", "self.consumed_by(%s)" % (fname,))
 
 class BootWriter(PythonWriter):
     def generate_Grammar(self, name, rules):

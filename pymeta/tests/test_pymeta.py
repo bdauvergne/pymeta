@@ -387,7 +387,25 @@ class OMetaTestCase(unittest.TestCase):
         """)
         self.assertEqual(g.broken('ab'), 'ab')
 
+    def test_consumedby(self):
+        """
+        Consumed by return the concatened iterable matched by the
+        sub expression
+        """
+        g = self.compile("""
+            consumedby = <'1'* '0' '1'*>
+        """)
+        self.assertEqual(g.consumedby('1111011111'), '1111011111')
 
+    def test_consumedby_listpattern(self):
+        """
+        Consumed by return the concatened iterable matched by the
+        sub expression
+        """
+        g = self.compile("""
+            consumedby = <['1'* '0' '1'*]*>
+        """)
+        self.assertEqual(g.consumedby([['1','0','1']]), [['1','0','1']])
 
 class PyExtractorTest(unittest.TestCase):
     """

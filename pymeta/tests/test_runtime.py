@@ -289,3 +289,11 @@ class RuntimeTests(unittest.TestCase):
         o = OMetaBase([["a"]])
         v, e = o.listpattern(lambda: o.exactly("a"))
         self.assertEqual((v, e), (["a"], [0, None]))
+
+    def test_consumed_by(self):
+        """
+        L{OMetaBase.consumed_by} return the full matched string, not each matched parts
+        """
+        o = OMetaBase("aax")
+        v, e = o.consumed_by(lambda: o.many(lambda: o.exactly("a")))
+        self.assertEqual((v, e), ("aa", _MaybeParseError(2, [('expected', None, 'a')])))

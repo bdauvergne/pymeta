@@ -264,6 +264,9 @@ class OMetaBase(object):
 
         self.currentError = self.input.nullError()
 
+    def debug(self, *args):
+        print args
+
     @classmethod
     def parse(cls, source):
         if isinstance(source, str):

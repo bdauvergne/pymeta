@@ -110,6 +110,8 @@ modedIPart = ['And' [['Many' :part]]]     -> ["*", part, None]
 
 expr = expr5(True):e (token('|') expr5(True))+:es !(es.insert(0, e))
           -> self.builder._or(es)
+      | expr5(True):e (token('||') expr5(True))+:es !(es.insert(0, e))
+          -> self.builder._xor(es)
       | expr5(False)
 
 ruleValue = token("->") -> self.ruleValueExpr()
@@ -148,6 +150,7 @@ opt = ( ['Apply' :ruleName :codeName [anything*:exprs]] -> self.builder.apply(ru
       | ['Optional' opt:expr]   -> self.builder.optional(expr)
       | ['Or' [opt*:exprs]]     -> self.builder._or(exprs)
       | ['And' [opt*:exprs]]    -> self.builder.sequence(exprs)
+      | ['Xor' [opt*:exprs]]    -> self.builder.sequence(exprs)
       | ['Not' opt:expr]        -> self.builder._not(expr)
       | ['Lookahead' opt:expr]  -> self.builder.lookahead(expr)
       | ['Bind' :name opt:expr] -> self.builder.bind(expr, name)

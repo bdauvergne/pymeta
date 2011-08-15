@@ -40,6 +40,9 @@ class TreeBuilder(object):
     def _not(self, expr):
         return ["Not", expr]
 
+    def _xor(self, exprs):
+        return ["Xor", exprs]
+
     def lookahead(self, expr):
         return ["Lookahead", expr]
 
@@ -212,6 +215,17 @@ class PythonWriter(object):
         if len(exprs) > 1:
             fnames = [self._newThunkFor("or", expr) for expr in exprs]
             return self._expr('or', 'self._or([%s])' % (', '.join(fnames)))
+        else:
+            return self._generateNode(exprs[0])
+
+    def generate_Xor(self, exprs):
+        """
+        Create a call to
+        self._xor([lambda: expr1, lambda: expr2, ... , lambda: exprN]).
+        """
+        if len(exprs) > 1:
+            fnames = [self._newThunkFor("xor", expr) for expr in exprs]
+            return self._expr('xor', 'self._xor([%s])' % (', '.join(fnames)))
         else:
             return self._generateNode(exprs[0])
 

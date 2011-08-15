@@ -429,6 +429,37 @@ class OMetaBase(object):
                 self.input = m
         raise _MaybeParseError(*joinErrors(errors))
 
+    def _xor(self, fns):
+        """
+        Call each of a list of functions in sequence until one succeeds,
+        then continue to verify no other succeed.
+
+        @param fns: A list of no-argument callables.
+        """
+        errors = []
+        ok = False
+        m = self.input
+        for f in fns:
+            try:
+                self.input = m
+                ret, err = f()
+            except _MaybeParseError, e:
+                errors.append(e)
+            else:
+                errors.append(err)
+                if ok:
+                    self.input = m
+                    raise _MaybeParseError(m.position, [('message', 'xor rule matched %s and %s' % (result, ret))])
+                result = ret
+                result_input = self.input
+                ok = True
+        if not ok:
+            self.input = m
+            raise _MaybeParseError(*joinErrors(errors))
+        else:
+            self.input = result_input
+            return result, joinErrors(errors)
+
 
     def _not(self, fn):
         """

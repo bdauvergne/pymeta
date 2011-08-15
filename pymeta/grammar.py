@@ -103,10 +103,11 @@ expr5 :ne = interleavePart:e (token("&&") interleavePart)+:es !(es.insert(0, e))
 interleavePart = token("(") expr4(True):e token(")") -> ["1", e]
  | expr4(True):part modedIPart(part):x -> x
 
-modedIPart = ['And' [['Many' :part]]]     -> ["*", part, None]
-           | ['And' [['Many1' :part]]]    -> ["+", part, None]
-           | ['And' [['Optional' :part]]] -> ["?", part, None]
-           | ['And' [['Bind' :name :part1]]]:e modedIPart(part1):part2 -> part2[:2] + [name]
+modedIPart = ['Many' :part]     -> ["*", part, None]
+           | ['Many1' :part]    -> ["+", part, None]
+           | ['Optional' :part] -> ["?", part, None]
+           | ['Bind' :name :part]:e modedIPart(part):newpart -> newpart[:2] + [name]
+           | ['And' :part] modedIPart(part):newpart -> newpart
            | :part                      -> ["1", part, None]
 
 expr = expr5(True):e (token('|') expr5(True))+:es !(es.insert(0, e))
@@ -149,9 +150,9 @@ opt = ( ['Apply' :ruleName :codeName [anything*:exprs]] -> self.builder.apply(ru
       | ['Many' opt:expr]       -> self.builder.many(expr)
       | ['Many1' opt:expr]      -> self.builder.many1(expr)
       | ['Optional' opt:expr]   -> self.builder.optional(expr)
-      | ['Or' [opt*:exprs]]     -> self.builder._or(exprs)
-      | ['And' [opt*:exprs]]    -> self.builder.sequence(exprs)
-      | ['Xor' [opt*:exprs]]    -> self.builder.sequence(exprs)
+      | ['Or' opt*:exprs]     -> self.builder._or(exprs)
+      | ['And' opt*:exprs]    -> self.builder.sequence(exprs)
+      | ['Xor' opt*:exprs]    -> self.builder.sequence(exprs)
       | ['Not' opt:expr]        -> self.builder._not(expr)
       | ['Lookahead' opt:expr]  -> self.builder.lookahead(expr)
       | ['Bind' :name opt:expr] -> self.builder.bind(expr, name)
@@ -162,7 +163,7 @@ opt = ( ['Apply' :ruleName :codeName [anything*:exprs]] -> self.builder.apply(ru
       | ['ConsumedBy' opt:expr] -> self.builder.consumedby(expr)
       | ['IndexConsumedBy' opt:expr] -> self.builder.index_consumedby(expr)
       | ['Range' :c1 :c2]       -> self.builder.range(c1, c2)
-      | ['Interleave' [[anything opt anything]*:exprs]] -> self.builder.interleave(exprs)
+      | ['Interleave' [anything opt anything]*:exprs] -> self.builder.interleave(exprs)
       )
 grammar = ['Grammar' :name [rulePair*:rs]] -> self.builder.makeGrammar(rs)
 rulePair = ['Rule' :name opt:rule] -> self.builder.rule(name, rule)

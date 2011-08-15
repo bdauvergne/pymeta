@@ -782,22 +782,12 @@ class BootOMetaGrammar(GrammarBase):
         self.locals['modedIPart'] = _locals
         def _G_or_1():
             def _G_listpattern_1():
-                _G_exactly_1, lastError = self.exactly('And')
+                _G_exactly_1, lastError = self.exactly('Many')
                 self.considerError(lastError)
-                def _G_listpattern_2():
-                    def _G_listpattern_1():
-                        _G_exactly_1, lastError = self.exactly('Many')
-                        self.considerError(lastError)
-                        _G_apply_2, lastError = self._apply(self.rule_anything, "anything", [])
-                        self.considerError(lastError)
-                        _locals['part'] = _G_apply_2
-                        return (_locals['part'], self.currentError)
-                    _G_listpattern_2, lastError = self.listpattern(_G_listpattern_1)
-                    self.considerError(lastError)
-                    return (_G_listpattern_2, self.currentError)
-                _G_listpattern_3, lastError = self.listpattern(_G_listpattern_2)
+                _G_apply_2, lastError = self._apply(self.rule_anything, "anything", [])
                 self.considerError(lastError)
-                return (_G_listpattern_3, self.currentError)
+                _locals['part'] = _G_apply_2
+                return (_locals['part'], self.currentError)
             _G_listpattern_2, lastError = self.listpattern(_G_listpattern_1)
             self.considerError(lastError)
             _G_python_3, lastError = eval('["*", part, None]', self.globals, _locals), None
@@ -805,22 +795,12 @@ class BootOMetaGrammar(GrammarBase):
             return (_G_python_3, self.currentError)
         def _G_or_2():
             def _G_listpattern_1():
-                _G_exactly_1, lastError = self.exactly('And')
+                _G_exactly_1, lastError = self.exactly('Many1')
                 self.considerError(lastError)
-                def _G_listpattern_2():
-                    def _G_listpattern_1():
-                        _G_exactly_1, lastError = self.exactly('Many1')
-                        self.considerError(lastError)
-                        _G_apply_2, lastError = self._apply(self.rule_anything, "anything", [])
-                        self.considerError(lastError)
-                        _locals['part'] = _G_apply_2
-                        return (_locals['part'], self.currentError)
-                    _G_listpattern_2, lastError = self.listpattern(_G_listpattern_1)
-                    self.considerError(lastError)
-                    return (_G_listpattern_2, self.currentError)
-                _G_listpattern_3, lastError = self.listpattern(_G_listpattern_2)
+                _G_apply_2, lastError = self._apply(self.rule_anything, "anything", [])
                 self.considerError(lastError)
-                return (_G_listpattern_3, self.currentError)
+                _locals['part'] = _G_apply_2
+                return (_locals['part'], self.currentError)
             _G_listpattern_2, lastError = self.listpattern(_G_listpattern_1)
             self.considerError(lastError)
             _G_python_3, lastError = eval('["+", part, None]', self.globals, _locals), None
@@ -828,22 +808,12 @@ class BootOMetaGrammar(GrammarBase):
             return (_G_python_3, self.currentError)
         def _G_or_3():
             def _G_listpattern_1():
-                _G_exactly_1, lastError = self.exactly('And')
+                _G_exactly_1, lastError = self.exactly('Optional')
                 self.considerError(lastError)
-                def _G_listpattern_2():
-                    def _G_listpattern_1():
-                        _G_exactly_1, lastError = self.exactly('Optional')
-                        self.considerError(lastError)
-                        _G_apply_2, lastError = self._apply(self.rule_anything, "anything", [])
-                        self.considerError(lastError)
-                        _locals['part'] = _G_apply_2
-                        return (_locals['part'], self.currentError)
-                    _G_listpattern_2, lastError = self.listpattern(_G_listpattern_1)
-                    self.considerError(lastError)
-                    return (_G_listpattern_2, self.currentError)
-                _G_listpattern_3, lastError = self.listpattern(_G_listpattern_2)
+                _G_apply_2, lastError = self._apply(self.rule_anything, "anything", [])
                 self.considerError(lastError)
-                return (_G_listpattern_3, self.currentError)
+                _locals['part'] = _G_apply_2
+                return (_locals['part'], self.currentError)
             _G_listpattern_2, lastError = self.listpattern(_G_listpattern_1)
             self.considerError(lastError)
             _G_python_3, lastError = eval('["?", part, None]', self.globals, _locals), None
@@ -851,46 +821,54 @@ class BootOMetaGrammar(GrammarBase):
             return (_G_python_3, self.currentError)
         def _G_or_4():
             def _G_listpattern_1():
-                _G_exactly_1, lastError = self.exactly('And')
+                _G_exactly_1, lastError = self.exactly('Bind')
                 self.considerError(lastError)
-                def _G_listpattern_2():
-                    def _G_listpattern_1():
-                        _G_exactly_1, lastError = self.exactly('Bind')
-                        self.considerError(lastError)
-                        _G_apply_2, lastError = self._apply(self.rule_anything, "anything", [])
-                        self.considerError(lastError)
-                        _locals['name'] = _G_apply_2
-                        _G_apply_3, lastError = self._apply(self.rule_anything, "anything", [])
-                        self.considerError(lastError)
-                        _locals['part1'] = _G_apply_3
-                        return (_locals['part1'], self.currentError)
-                    _G_listpattern_2, lastError = self.listpattern(_G_listpattern_1)
-                    self.considerError(lastError)
-                    return (_G_listpattern_2, self.currentError)
-                _G_listpattern_3, lastError = self.listpattern(_G_listpattern_2)
+                _G_apply_2, lastError = self._apply(self.rule_anything, "anything", [])
                 self.considerError(lastError)
-                return (_G_listpattern_3, self.currentError)
+                _locals['name'] = _G_apply_2
+                _G_apply_3, lastError = self._apply(self.rule_anything, "anything", [])
+                self.considerError(lastError)
+                _locals['part'] = _G_apply_3
+                return (_locals['part'], self.currentError)
             _G_listpattern_2, lastError = self.listpattern(_G_listpattern_1)
             self.considerError(lastError)
             _locals['e'] = _G_listpattern_2
-            _G_python_3, lastError = eval('part1', self.globals, _locals), None
+            _G_python_3, lastError = eval('part', self.globals, _locals), None
             self.considerError(lastError)
             _G_apply_4, lastError = self._apply(self.rule_modedIPart, "modedIPart", [_G_python_3])
             self.considerError(lastError)
-            _locals['part2'] = _G_apply_4
-            _G_python_5, lastError = eval('part2[:2] + [name]', self.globals, _locals), None
+            _locals['newpart'] = _G_apply_4
+            _G_python_5, lastError = eval('newpart[:2] + [name]', self.globals, _locals), None
             self.considerError(lastError)
             return (_G_python_5, self.currentError)
         def _G_or_5():
+            def _G_listpattern_1():
+                _G_exactly_1, lastError = self.exactly('And')
+                self.considerError(lastError)
+                _G_apply_2, lastError = self._apply(self.rule_anything, "anything", [])
+                self.considerError(lastError)
+                _locals['part'] = _G_apply_2
+                return (_locals['part'], self.currentError)
+            _G_listpattern_2, lastError = self.listpattern(_G_listpattern_1)
+            self.considerError(lastError)
+            _G_python_3, lastError = eval('part', self.globals, _locals), None
+            self.considerError(lastError)
+            _G_apply_4, lastError = self._apply(self.rule_modedIPart, "modedIPart", [_G_python_3])
+            self.considerError(lastError)
+            _locals['newpart'] = _G_apply_4
+            _G_python_5, lastError = eval('newpart', self.globals, _locals), None
+            self.considerError(lastError)
+            return (_G_python_5, self.currentError)
+        def _G_or_6():
             _G_apply_1, lastError = self._apply(self.rule_anything, "anything", [])
             self.considerError(lastError)
             _locals['part'] = _G_apply_1
             _G_python_2, lastError = eval('["1", part, None]', self.globals, _locals), None
             self.considerError(lastError)
             return (_G_python_2, self.currentError)
-        _G_or_6, lastError = self._or([_G_or_1, _G_or_2, _G_or_3, _G_or_4, _G_or_5])
+        _G_or_7, lastError = self._or([_G_or_1, _G_or_2, _G_or_3, _G_or_4, _G_or_5, _G_or_6])
         self.considerError(lastError)
-        return (_G_or_6, self.currentError)
+        return (_G_or_7, self.currentError)
 
 
     def rule_expr(self):

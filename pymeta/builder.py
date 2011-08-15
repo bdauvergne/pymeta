@@ -35,19 +35,19 @@ class TreeBuilder(object):
         return ["Optional", expr]
 
     def _or(self, exprs):
-        return ["Or", exprs]
+        return ["Or"] + exprs
 
     def _not(self, expr):
         return ["Not", expr]
 
     def _xor(self, exprs):
-        return ["Xor", exprs]
+        return ["Xor"] + exprs
 
     def lookahead(self, expr):
         return ["Lookahead", expr]
 
     def sequence(self, exprs):
-        return ["And", exprs]
+        return ["And"] + exprs
 
     def bind(self, expr, name):
         return ["Bind", name, expr]
@@ -74,7 +74,7 @@ class TreeBuilder(object):
         return ["Range", c1, c2]
 
     def interleave(self, exprs):
-        return ["Interleave", exprs]
+        return ["Interleave"]+exprs
 
 class PythonWriter(object):
     """
@@ -210,7 +210,7 @@ class PythonWriter(object):
         return self._expr('or', 'self._or([%s])' % (', '.join([realf, passf])))
 
 
-    def generate_Or(self, exprs):
+    def generate_Or(self, *exprs):
         """
         Create a call to
         self._or([lambda: expr1, lambda: expr2, ... , lambda: exprN]).
@@ -221,7 +221,7 @@ class PythonWriter(object):
         else:
             return self._generateNode(exprs[0])
 
-    def generate_Xor(self, exprs):
+    def generate_Xor(self, *exprs):
         """
         Create a call to
         self._xor([lambda: expr1, lambda: expr2, ... , lambda: exprN]).
@@ -248,7 +248,7 @@ class PythonWriter(object):
         fname = self._newThunkFor("lookahead", expr)
         return self._expr("lookahead", "self.lookahead(%s)" %(fname,))
 
-    def generate_And(self, exprs):
+    def generate_And(self, *exprs):
         """
         Generate code for each statement in order.
         """
@@ -331,7 +331,7 @@ class PythonWriter(object):
         """
         return self._expr('range', 'self.range(%r, %r)' % (c1, c2))
 
-    def generate_Interleave(self, exprs):
+    def generate_Interleave(self, *exprs):
         """
         Create a call to
         self._interleave([lambda: expr1, lambda: expr2, ... , lambda: exprN]).

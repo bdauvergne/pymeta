@@ -78,6 +78,7 @@ expr1 = application
           |token('(') expr:e token(')') -> e
           |token('[') expr:e token(']') -> self.builder.listpattern(e)
           |token('<') expr:e token('>') -> self.builder.consumedby(e)
+          |token('@<') expr:e token('>') -> self.builder.index_consumedby(e)
 
 expr2 = token('~') (token('~') expr2:e -> self.builder.lookahead(e)
                        |expr2:e -> self.builder._not(e))
@@ -159,6 +160,7 @@ opt = ( ['Apply' :ruleName :codeName [anything*:exprs]] -> self.builder.apply(ru
       | ['Python' :code]        -> self.builder.expr(code)
       | ['List' opt:exprs]      -> self.builder.listpattern(exprs)
       | ['ConsumedBy' opt:expr] -> self.builder.consumedby(expr)
+      | ['IndexConsumedBy' opt:expr] -> self.builder.index_consumedby(expr)
       | ['Range' :c1 :c2]       -> self.builder.range(c1, c2)
       | ['Interleave' [[anything opt anything]*:exprs]] -> self.builder.interleave(exprs)
       )

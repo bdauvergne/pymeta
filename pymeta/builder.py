@@ -67,6 +67,9 @@ class TreeBuilder(object):
     def consumedby(self, exprs):
         return ["ConsumedBy", exprs]
 
+    def index_consumedby(self, exprs):
+        return ["IndexConsumedBy", exprs]
+
     def range(self, c1, c2):
         return ["Range", c1, c2]
 
@@ -317,6 +320,10 @@ class PythonWriter(object):
     def generate_ConsumedBy(self, expr):
         fname = self._newThunkFor("consumed_by", expr)
         return self._expr("consumed_by", "self.consumed_by(%s)" % (fname,))
+
+    def generate_IndexConsumedBy(self, expr):
+        fname = self._newThunkFor("index_consumed_by", expr)
+        return self._expr("index_consumed_by", "self.index_consumed_by(%s)" % (fname,))
 
     def generate_Range(self, c1, c2):
         """

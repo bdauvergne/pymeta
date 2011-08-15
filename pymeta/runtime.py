@@ -628,6 +628,15 @@ class OMetaBase(object):
             consumed = ''.join(consumed)
         return consumed, r[1]
 
+    def index_consumed_by(self, f):
+        """
+            Try to parse f, if successful return the start and end offset of
+            the full string matching it.
+        """
+        m = self.input
+        r = f()
+        return [m.position, self.input.position], r[1]
+
     def range(self, c1, c2):
         m = self.input
         x, e = self.rule_anything()

@@ -397,6 +397,15 @@ class OMetaTestCase(unittest.TestCase):
         """)
         self.assertEqual(g.consumedby('1111011111'), '1111011111')
 
+    def test_range(self):
+        """
+        Range of characters can be matched
+        """
+        g = self.compile("""
+            integer = '0'..'9'*:c1
+        """)
+        self.assertEqual(g.integer('1111011111'), '1111011111')
+
     def test_consumedby_listpattern(self):
         """
         Consumed by return the concatened iterable matched by the

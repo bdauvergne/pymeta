@@ -309,6 +309,22 @@ class PythonWriterTests(unittest.TestCase):
                _G_consumed_by_2
                """))
 
+    def test_range(self):
+        """
+        Test code generation for .. operator
+        """
+        x = self.builder.consumedby(self.builder.exactly("x"))
+        self.assertEqual(writePython(x),
+            dd("""
+               def _G_consumed_by_1():
+                   _G_exactly_1, lastError = self.exactly('x')
+                   self.considerError(lastError)
+                   return (_G_exactly_1, self.currentError)
+               _G_consumed_by_2, lastError = self.consumed_by(_G_consumed_by_1)
+               self.considerError(lastError)
+               _G_consumed_by_2
+               """))
+
     def test_rule(self):
         """
         Test generation of entire rules.

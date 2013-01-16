@@ -297,3 +297,11 @@ class RuntimeTests(unittest.TestCase):
         o = OMetaBase("aax")
         v, e = o.consumed_by(lambda: o.many(lambda: o.exactly("a")))
         self.assertEqual((v, e), ("aa", _MaybeParseError(2, [('expected', None, 'a')])))
+
+    def test_range(self):
+        """
+        L{OMetaBase.range} matches range of characters
+        """
+        o = OMetaBase("2")
+        v, e = o.range('0', '9')
+        self.assertEqual((v, e), ("2", [0, None]))

@@ -300,6 +300,71 @@ class BootOMetaGrammar(GrammarBase):
         return (_G_python_7, self.currentError)
 
 
+    def rule_character2(self):
+        _locals = {'self': self}
+        self.locals['character2'] = _locals
+        _G_python_1, lastError = eval('"\'"', self.globals, _locals), None
+        self.considerError(lastError)
+        _G_apply_2, lastError = self._apply(self.rule_token, "token", [_G_python_1])
+        self.considerError(lastError)
+        def _G_consumed_by_3():
+            def _G_many_1():
+                def _G_or_1():
+                    _G_apply_1, lastError = self._apply(self.rule_escapedChar, "escapedChar", [])
+                    self.considerError(lastError)
+                    return (_G_apply_1, self.currentError)
+                def _G_or_2():
+                    def _G_not_1():
+                        _G_exactly_1, lastError = self.exactly("'")
+                        self.considerError(lastError)
+                        return (_G_exactly_1, self.currentError)
+                    _G_not_2, lastError = self._not(_G_not_1)
+                    self.considerError(lastError)
+                    _G_apply_3, lastError = self._apply(self.rule_anything, "anything", [])
+                    self.considerError(lastError)
+                    return (_G_apply_3, self.currentError)
+                _G_or_3, lastError = self._or([_G_or_1, _G_or_2])
+                self.considerError(lastError)
+                return (_G_or_3, self.currentError)
+            _G_many_2, lastError = self.many(_G_many_1)
+            self.considerError(lastError)
+            return (_G_many_2, self.currentError)
+        _G_consumed_by_4, lastError = self.consumed_by(_G_consumed_by_3)
+        self.considerError(lastError)
+        _locals['c'] = _G_consumed_by_4
+        _G_python_5, lastError = eval('"\'"', self.globals, _locals), None
+        self.considerError(lastError)
+        _G_apply_6, lastError = self._apply(self.rule_token, "token", [_G_python_5])
+        self.considerError(lastError)
+        _G_python_7, lastError = eval('c', self.globals, _locals), None
+        self.considerError(lastError)
+        return (_G_python_7, self.currentError)
+
+
+    def rule_range(self):
+        _locals = {'self': self}
+        self.locals['range'] = _locals
+        _G_apply_1, lastError = self._apply(self.rule_character2, "character2", [])
+        self.considerError(lastError)
+        _locals['c1'] = _G_apply_1
+        _G_python_2, lastError = eval('".."', self.globals, _locals), None
+        self.considerError(lastError)
+        _G_apply_3, lastError = self._apply(self.rule_token, "token", [_G_python_2])
+        self.considerError(lastError)
+        _G_apply_4, lastError = self._apply(self.rule_character2, "character2", [])
+        self.considerError(lastError)
+        _locals['c2'] = _G_apply_4
+        def _G_pred_5():
+            _G_python_1, lastError = eval('c1 < c2', self.globals, _locals), None
+            self.considerError(lastError)
+            return (_G_python_1, self.currentError)
+        _G_pred_6, lastError = self.pred(_G_pred_5)
+        self.considerError(lastError)
+        _G_python_7, lastError = eval('self.builder.range(c1, c2)', self.globals, _locals), None
+        self.considerError(lastError)
+        return (_G_python_7, self.currentError)
+
+
     def rule_string(self):
         _locals = {'self': self}
         self.locals['string'] = _locals
@@ -413,14 +478,18 @@ class BootOMetaGrammar(GrammarBase):
             self.considerError(lastError)
             return (_G_apply_1, self.currentError)
         def _G_or_6():
-            _G_apply_1, lastError = self._apply(self.rule_character, "character", [])
+            _G_apply_1, lastError = self._apply(self.rule_range, "range", [])
             self.considerError(lastError)
             return (_G_apply_1, self.currentError)
         def _G_or_7():
-            _G_apply_1, lastError = self._apply(self.rule_string, "string", [])
+            _G_apply_1, lastError = self._apply(self.rule_character, "character", [])
             self.considerError(lastError)
             return (_G_apply_1, self.currentError)
         def _G_or_8():
+            _G_apply_1, lastError = self._apply(self.rule_string, "string", [])
+            self.considerError(lastError)
+            return (_G_apply_1, self.currentError)
+        def _G_or_9():
             _G_python_1, lastError = eval("'('", self.globals, _locals), None
             self.considerError(lastError)
             _G_apply_2, lastError = self._apply(self.rule_token, "token", [_G_python_1])
@@ -435,7 +504,7 @@ class BootOMetaGrammar(GrammarBase):
             _G_python_6, lastError = eval('e', self.globals, _locals), None
             self.considerError(lastError)
             return (_G_python_6, self.currentError)
-        def _G_or_9():
+        def _G_or_10():
             _G_python_1, lastError = eval("'['", self.globals, _locals), None
             self.considerError(lastError)
             _G_apply_2, lastError = self._apply(self.rule_token, "token", [_G_python_1])
@@ -450,7 +519,7 @@ class BootOMetaGrammar(GrammarBase):
             _G_python_6, lastError = eval('self.builder.listpattern(e)', self.globals, _locals), None
             self.considerError(lastError)
             return (_G_python_6, self.currentError)
-        def _G_or_10():
+        def _G_or_11():
             _G_python_1, lastError = eval("'<'", self.globals, _locals), None
             self.considerError(lastError)
             _G_apply_2, lastError = self._apply(self.rule_token, "token", [_G_python_1])
@@ -465,9 +534,9 @@ class BootOMetaGrammar(GrammarBase):
             _G_python_6, lastError = eval('self.builder.consumedby(e)', self.globals, _locals), None
             self.considerError(lastError)
             return (_G_python_6, self.currentError)
-        _G_or_11, lastError = self._or([_G_or_1, _G_or_2, _G_or_3, _G_or_4, _G_or_5, _G_or_6, _G_or_7, _G_or_8, _G_or_9, _G_or_10])
+        _G_or_12, lastError = self._or([_G_or_1, _G_or_2, _G_or_3, _G_or_4, _G_or_5, _G_or_6, _G_or_7, _G_or_8, _G_or_9, _G_or_10, _G_or_11])
         self.considerError(lastError)
-        return (_G_or_11, self.currentError)
+        return (_G_or_12, self.currentError)
 
 
     def rule_expr2(self):

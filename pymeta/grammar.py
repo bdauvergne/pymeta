@@ -54,6 +54,10 @@ escapedChar = '\\' ('n' -> "\n"
 
 character = token("'") (escapedChar | ~('\'') anything)*:c token("'") -> self.builder.exactly(''.join(c))
 
+character2 = token("'") <(escapedChar | ~('\'') anything)*>:c token("'") -> c
+
+range = character2:c1 token("..") character2:c2 ?(c1 < c2) -> self.builder.range(c1, c2)
+
 string = token('"') (escapedChar | ~('"') anything)*:c token('"') -> self.builder.match_string(''.join(c))
 
 name = letter:x letterOrDigit*:xs !(xs.insert(0, x)) -> ''.join(xs)
@@ -68,6 +72,7 @@ expr1 = application
           |semanticPredicate
           |semanticAction
           |number
+          |range
           |character
           |string
           |token('(') expr:e token(')') -> e
@@ -136,6 +141,7 @@ opt = ( ['Apply' :ruleName :codeName [anything*:exprs]] -> self.builder.apply(ru
       | ['Python' :code]        -> self.builder.expr(code)
       | ['List' opt:exprs]      -> self.builder.listpattern(exprs)
       | ['ConsumedBy' opt:expr] -> self.builder.consumedby(expr)
+      | ['Range' :c1 :c2]       -> self.builder.range(c1, c2)
       )
 grammar = ['Grammar' :name [rulePair*:rs]] -> self.builder.makeGrammar(rs)
 rulePair = ['Rule' :name opt:rule] -> self.builder.rule(name, rule)

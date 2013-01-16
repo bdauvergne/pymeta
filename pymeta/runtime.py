@@ -597,6 +597,16 @@ class OMetaBase(object):
             consumed = ''.join(consumed)
         return consumed, r[1]
 
+    def range(self, c1, c2):
+        m = self.input
+        x, e = self.rule_anything()
+        if c1 <= x <= c2:
+            return x, e
+        else:
+            self.input = m
+            e[1] = expected('range between %r and %r' % (c1, c2))
+            raise _MaybeParseError(*e)
+
     def pythonExpr(self, endChars="\r\n"):
         """
         Extract a Python expression from the input and return it.

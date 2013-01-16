@@ -64,6 +64,9 @@ class TreeBuilder(object):
     def consumedby(self, exprs):
         return ["ConsumedBy", exprs]
 
+    def range(self, c1, c2):
+        return ["Range", c1, c2]
+
 class PythonWriter(object):
     """
     Converts an OMeta syntax tree into Python source.
@@ -164,7 +167,6 @@ class PythonWriter(object):
         Create a call to self.exactly(literal).
         """
         return self._expr('exactly', 'self.exactly(%r)' % (literal,))
-
 
     def generate_MatchString(self, literal):
         """
@@ -298,6 +300,12 @@ class PythonWriter(object):
     def generate_ConsumedBy(self, expr):
         fname = self._newThunkFor("consumed_by", expr)
         return self._expr("consumed_by", "self.consumed_by(%s)" % (fname,))
+
+    def generate_Range(self, c1, c2):
+        """
+        Create a call to self.range(c1, c2)
+        """
+        return self._expr('range', 'self.range(%r, %r)' % (c1, c2))
 
 class BootWriter(PythonWriter):
     def generate_Grammar(self, name, rules):

@@ -325,6 +325,26 @@ class PythonWriterTests(unittest.TestCase):
                _G_consumed_by_2
                """))
 
+    def test_interleave(self):
+        """
+        Test code generation for && operator
+        """
+        x = self.builder.interleave([['1', self.builder.exactly("x"), None], ['1', self.builder.exactly("y"), None]])
+        self.assertEqual(writePython(x),
+            dd("""
+               def _G_interleave_1():
+                   _G_exactly_1, lastError = self.exactly('x')
+                   self.considerError(lastError)
+                   return (_G_exactly_1, self.currentError)
+               def _G_interleave_2():
+                   _G_exactly_1, lastError = self.exactly('y')
+                   self.considerError(lastError)
+                   return (_G_exactly_1, self.currentError)
+               _G_interleave_3, lastError = self._interleave(_locals, '1', _G_interleave_1, None, '1', _G_interleave_2, None)
+               self.considerError(lastError)
+               _G_interleave_3
+               """))
+
     def test_rule(self):
         """
         Test generation of entire rules.

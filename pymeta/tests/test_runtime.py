@@ -305,3 +305,14 @@ class RuntimeTests(unittest.TestCase):
         o = OMetaBase("2")
         v, e = o.range('0', '9')
         self.assertEqual((v, e), ("2", [0, None]))
+
+    def test_interleave(self):
+        """
+        L{OMetaBase.interleave} matched randomly mixed parts
+        """
+        o = OMetaBase("ab")
+        d = dict()
+        v, e = o._interleave(d, '1', lambda: o.exactly('a'), None, '*', lambda: o.exactly('b'), 'x')
+        self.assertEqual((v, e), (['a', ['b']], [1, None]))
+        self.assertIn('x', d)
+        self.assertEqual(d['x'], ['b'])

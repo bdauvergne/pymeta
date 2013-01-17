@@ -607,6 +607,58 @@ class OMetaBase(object):
             e[1] = expected('range between %r and %r' % (c1, c2))
             raise _MaybeParseError(*e)
 
+    def _interleave(self, _locals, *args):
+        """
+        Call each of a list of functions in sequence until all succeed at least
+        ontime, rewinding the input between each.
+
+        @param fns: A list of no-argument callables.
+        """
+        args = list(args)
+        currInput = self.input
+        errors = []
+        ans = [None]*(len(args)/3)
+        for idx in range(0, len(args), 3):
+            mod, fun, name = args[idx:idx+3]
+            ans[idx/3] = [] if mod in ('*', '+') else None
+        # tries for as long it matches
+        last_match = None
+        while True:
+            for idx in range(0, len(args), 3):
+                mod, fun, name = args[idx:idx+3]
+                if mod != '0':
+                    try:
+                        self.input = currInput
+                        v, e = fun()
+                        if mod == '*':
+                            ans[idx/3].append(v)
+                        elif mod == '+':
+                            ans[idx/3].append(v)
+                            args[idx] = '*'
+                        elif mod in ('?','1'):
+                            ans[idx/3] = v
+                            args[idx] = '0'
+                        else:
+                            raise ValueError('invalid mode in OMeta._interleave')
+                        errors.append(e)
+                        currInput = self.input
+                        last_match = e
+                        break
+                    except _MaybeParseError, e:
+                        self.input = currInput
+            else:
+                break
+        for idx in range(0, len(args), 3):
+            if args[idx] not in ('*', '0', '?'):
+                break
+        else:
+            for idx in range(0, len(args), 3):
+                mod, fun, name = args[idx:idx+3]
+                if name:
+                    _locals[name] = ans[idx/3]
+            return ans, last_match
+        raise _MaybeParseError(args, *joinErrors(errors))
+
     def pythonExpr(self, endChars="\r\n"):
         """
         Extract a Python expression from the input and return it.

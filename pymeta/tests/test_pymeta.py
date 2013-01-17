@@ -406,6 +406,16 @@ class OMetaTestCase(unittest.TestCase):
         """)
         self.assertEqual(g.integer('1111011111'), '1111011111')
 
+    def test_interleave(self):
+        """
+        Match can be interleaved
+        """
+        g = self.compile("""
+            interleaved = 'x' && 'y'
+        """)
+        self.assertEqual(g.interleaved('xy'), 'xy')
+        self.assertEqual(g.interleaved('yx'), 'xy')
+
     def test_consumedby_listpattern(self):
         """
         Consumed by return the concatened iterable matched by the

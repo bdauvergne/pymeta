@@ -196,6 +196,11 @@ class InputStream(object):
         self.memo[name] = rec
         return rec
 
+    def __repr__(self):
+        return '<InputStream data:{self.data} position:{self.position}' \
+            ' memo:{self.memo} tl:{self.tl} basetype:{self.basetype}>' \
+                .format(self=self)
+
 class ArgInput(object):
     def __init__(self, arg, parent):
         self.arg = arg
